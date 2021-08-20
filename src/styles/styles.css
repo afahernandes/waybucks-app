@@ -1,0 +1,39 @@
+.button1 {
+    background-color: #BD0707; /* Green */
+    border: 0;
+    color: white;
+    margin: 2px;
+    border: 1px solid #BD0707;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 15px;
+    transition-duration: 0.4s;
+    cursor: pointer;
+  }
+  .button1:hover {
+    background-color: #fff;
+    margin: 2px;
+    border: 1px solid #f44336;
+    color: #BD0707;
+  }
+  
+  .button2 {
+    background-color: white;
+    border: 1px solid #BD0707;
+    color: #BD0707;
+    text-align: center;
+    margin: 2px;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 15px;
+    transition-duration: 0.4s;
+    cursor: pointer;
+  }
+  .button2:hover {
+    background-color: #BD0707;
+    margin: 2px;
+    border: 1px solid #BD0707;
+    color: #fff;
+  }
+  

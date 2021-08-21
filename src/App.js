@@ -3,16 +3,15 @@ import React from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Header from "./component/navbars/Header";
 import  './styles/styles.css';
-import Home from "./pages/Home";
+import DetailProduct from "./pages/DetailProduct";
 
 function App() {
   return (
     <div className="App">
      <Header/>
-     <Home/>
+     <DetailProduct/>
 
     </div>
   );
 }
-
 export default App;

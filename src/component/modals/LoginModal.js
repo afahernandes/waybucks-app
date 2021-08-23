@@ -3,7 +3,6 @@ import { Form, Button, Modal } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
 
 function LoginModal(props) {
-  const route = useHistory();
   const datauser = JSON.parse(localStorage.getItem("datauser"));
   const { handleClose, show, regis } = props;
 
@@ -25,6 +24,7 @@ function LoginModal(props) {
     e.preventDefault();
     datauser.map(function (element) {
       if (data.email === element.email && data.password === element.password) {
+        localStorage.setItem("login", 'true');
         localStorage.setItem("datalogin", JSON.stringify(element));
         props.setData(data);
         handleClose();

@@ -5,10 +5,12 @@ import { useState } from "react";
 import GuestNav from "./GuestNav";
 import AdminNav from "./AdminNav";
 import UserNav from "./UserNav";
+import {  useHistory } from "react-router-dom";
 
 
 function Header() {
   
+  const router = useHistory();
   const datalogin = JSON.parse(localStorage.getItem('datalogin'))
   console.log(datalogin);
 
@@ -25,11 +27,15 @@ function Header() {
   function handleLogout(){
 
     localStorage.removeItem('datalogin');
+    localStorage.removeItem('login');
     setData({ isLogin: false,
       email: "",
       password: "",
       status: "",})
+      
+      router.push('/');
     }
+
   return (
     <div>
       <Navbar expand="lg">

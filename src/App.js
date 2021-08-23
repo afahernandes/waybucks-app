@@ -19,6 +19,9 @@ import datatopping from "./data/topping.json"
 import datatransaction from "./data/Transaction.json"
 import AddProduct from "./pages/AddProduct";
 import AddTopping from "./pages/AddTopping";
+import AdminRoute from "./component/routes/AdminRoute";
+import PrivateRoute from "./component/routes/PrivateRoute";
+import Profile from "./pages/Profile";
 
 function App() {
   localStorage.setItem('datauser', JSON.stringify(datauser));
@@ -34,13 +37,13 @@ function App() {
         <Row className="justify-content-md-center">
       <Switch>
         <Route path="/" exact component={Home} />
-        <Route path="/product" exact component={DetailProduct} />
-        <Route path="/cartPage" exact component={CartPage} />
+        <PrivateRoute path="/profile" exact component={Profile} />
+        <PrivateRoute path="/product" exact component={DetailProduct} />
+        <PrivateRoute path="/cartPage" exact component={CartPage} />
 
-        <Route path="/transaction" exact component={Transactions} />
-        <Route path="/addproduct" exact component={AddProduct} />
-        <Route path="/addtopping" exact component={AddTopping} />
-
+        <AdminRoute path="/transaction" exact component={Transactions} />
+        <AdminRoute path="/addproduct" exact component={AddProduct} />
+        <AdminRoute path="/addtopping" exact component={AddTopping} />
         <Route component={NotFound} />
       </Switch>
     </Row></Container>

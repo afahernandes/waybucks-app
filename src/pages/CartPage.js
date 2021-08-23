@@ -1,27 +1,73 @@
 import React from "react";
-import { Col, Form, Row, Button } from "react-bootstrap";
-import img1 from '../assets/img1.svg';
+import { Col, Form, Row, Button, Image } from "react-bootstrap";
+import img1 from "../assets/img1.svg";
+import del from "../assets/delete.svg";
 
 function CartPage() {
   return (
     <div>
       <Row className="justify-content-md-center">
-        <Col xs={4}>
+        <Col xs={6}>
           <h3 className="header3">My Cart</h3>
+          <p className="tittlePrice">Review Your Order</p>
+          <hr />
 
           <Row>
-             <Row>
-                <Col xs={6}>
-                <p className="header3">Total</p>
-                <p className="tittlePrice">Topping : Topping 1, Topping 2, Topping 3</p>
-                </Col>
-                <Col xs={6} style={{textAlign:"right"}}>
-                  <p className="header3">Rp 20.000</p>
-                </Col>
-              </Row>
+            <Row style={{ marginBottom: "20px" }}>
+              <Col xs={1}>
+                <Image src={img1} width={"100%"}  alt="img" />
+              </Col>
+              <Col xs={8}>
+                <p className="tittleProduct">Coffee Vanila</p>
+                <p className="tittlePrice">Topping : Topping 1, Topping 2</p>
+              </Col>
+              <Col xs={3} style={{ textAlign: "right" }}>
+                <p className="tittleProduct">Rp 20.000</p>
+                <img
+                  style={{
+                    width: "20px",
+                    height: "20px",
+                  }}
+                  src={del} alt="img" 
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col xs={1}>
+                <Image src={img1} width={"100%"} />
+              </Col>
+              <Col xs={8}>
+                <p className="tittleProduct">Coffee Vanila</p>
+                <p className="tittlePrice">Topping : Topping 1, Topping 2</p>
+              </Col>
+              <Col xs={3} style={{ textAlign: "right" }}>
+                <p className="tittleProduct">Rp 20.000</p>
+                <img
+                  style={{
+                    width: "20px",
+                    height: "20px",
+                  }}
+                  src={del} alt="img" 
+                />
+              </Col>
+            </Row>
+
+            <hr />
+
+            <Row className="mb-3">
+              <Col xs={6}>
+                <hr />
+                <p className="tittlePrice">Review Your Order</p>
+              </Col>
+              <Col xs={6}>
+                <div className="d-flex flex-column justify-content-space-beetwen">
+                  <div></div>
+                </div>
+              </Col>
+            </Row>
           </Row>
         </Col>
-        <Col xs={3}>
+        <Col xs={4}>
           <div className="d-flex flex-column justify-content-space-beetwen">
             <div>
               <Form>

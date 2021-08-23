@@ -1,42 +1,51 @@
 import React from "react";
-import { Navbar, Container, Nav, Button, NavLink } from "react-bootstrap";
+import { Navbar, Container, Nav,  NavLink } from "react-bootstrap";
 import Icon from "../../assets/brandlogo.svg";
-import LoginModal from "../modals/LoginModal";
 import { useState } from "react";
-import RegisterModal from "../modals/RegisterModal";
+import GuestNav from "./GuestNav";
+import AdminNav from "./AdminNav";
+import UserNav from "./UserNav";
 
 
 function Header() {
-  const [show, setShow] = useState(false);
-  const [showRegis, setShowRegis] = useState(false);
+  
+  const datalogin = JSON.parse(localStorage.getItem('datalogin'))
+  console.log(datalogin);
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
 
-  const handleShowRegis = () => setShowRegis(true);
-  const handleCloseRegis = () => setShowRegis(false);
+  const [data, setData] = useState({
+    isLogin: false,
+    email: "",
+    password: "",
+    status: "",
+  });
 
+ 
+
+  function handleLogout(){
+
+    localStorage.removeItem('datalogin');
+    setData({ isLogin: false,
+      email: "",
+      password: "",
+      status: "",})
+    }
   return (
     <div>
       <Navbar expand="lg">
         <Container>
           <Navbar.Brand>
-            <NavLink>
+            <NavLink >
               <img src={Icon} style={{padding: '2px'}} alt="brand" />
             </NavLink>
           </Navbar.Brand>
-          <Navbar.Toggle aria-controls="basic-navbar-nav" />
-          <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto"></Nav>
             <Nav>
-              <Button className="button2" onClick={handleShow}>Login</Button>
-              <Button className="button1" onClick={handleShowRegis} >Register</Button>
+              {datalogin?(datalogin.status==="Admin"?<AdminNav  handleLogout={handleLogout}/> : <UserNav handleLogout={handleLogout}  /> ) : <GuestNav setData={setData} />}
             </Nav>
-          </Navbar.Collapse>
         </Container>
       </Navbar>
-      <LoginModal show={show} handleClose={handleClose}/>
-      <RegisterModal show={showRegis} handleClose={handleCloseRegis}/>
+    
     </div>
   );
 }

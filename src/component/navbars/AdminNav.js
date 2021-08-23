@@ -18,9 +18,9 @@ function AdminNav(props) {
     
     return (
         <div>
-            <Nav>
+            <Nav >
                 <Dropdown >
-                    <Dropdown.Toggle as={Nav.Link}><Image src={img1} alt="account" style={{width:'60px', height:'60px' }}/></Dropdown.Toggle>
+                    <Dropdown.Toggle as={Nav.Link} style={{marginRight:'10px'}}><Image src={img1} alt="account" style={{width:"60px",height:"60px", position : 'relative' , transform : 'translate(15px, -3px)'}} /></Dropdown.Toggle>
                     <Dropdown.Menu align="right">
                         <Dropdown.Item onClick={goToTransaction} ><img src={img2} alt="profile" className="img-icon" />Transactions</Dropdown.Item>
                         <Dropdown.Item onClick={goToAddProduct} ><img src={img3} alt="profile" className="img-icon" />Add Product</Dropdown.Item>

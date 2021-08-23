@@ -38,7 +38,7 @@ function RegisterModal(props) {
     setData({
       ...data,
       id:"", 
-      image:"https://ujhw03sswsepgw3234x0qm51-wpengine.netdna-ssl.com/wp-content/uploads/2018/05/171025-202659-Donnely-Christopher-400x400x72.jpg",
+      image:"/img/User.png",
       [e.target.name]: e.target.value,
       username: "",
       gender: "",

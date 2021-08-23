@@ -19,9 +19,9 @@ import datatopping from "./data/topping.json"
 import datatransaction from "./data/Transaction.json"
 import AddProduct from "./pages/AddProduct";
 import AddTopping from "./pages/AddTopping";
+import Profile from "./pages/Profile";
 import AdminRoute from "./component/routes/AdminRoute";
 import PrivateRoute from "./component/routes/PrivateRoute";
-import Profile from "./pages/Profile";
 
 function App() {
   localStorage.setItem('datauser', JSON.stringify(datauser));
@@ -38,8 +38,8 @@ function App() {
       <Switch>
         <Route path="/" exact component={Home} />
         <PrivateRoute path="/profile" exact component={Profile} />
-        <PrivateRoute path="/product" exact component={DetailProduct} />
-        <PrivateRoute path="/cartPage" exact component={CartPage} />
+        <PrivateRoute path="/product/:id" exact component={DetailProduct} />
+        <PrivateRoute path="/cart" exact component={CartPage} />
 
         <AdminRoute path="/transaction" exact component={Transactions} />
         <AdminRoute path="/addproduct" exact component={AddProduct} />

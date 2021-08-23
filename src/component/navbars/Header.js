@@ -36,13 +36,19 @@ function Header() {
       router.push('/');
     }
 
+    function hadleHome(){
+
+        router.push('/');
+      }
+  
+
   return (
     <div>
       <Navbar expand="lg">
         <Container>
           <Navbar.Brand>
             <NavLink >
-              <img src={Icon} style={{padding: '2px'}} alt="brand" />
+              <img src={Icon} onClick={hadleHome} style={{padding: '4px'}} alt="brand" />
             </NavLink>
           </Navbar.Brand>
             <Nav className="me-auto"></Nav>

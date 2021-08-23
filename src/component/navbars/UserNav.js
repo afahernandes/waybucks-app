@@ -7,6 +7,8 @@ import user from "../../assets/user.svg";
 function UserNav(props) {
     const router = useHistory();
     const datalogin = JSON.parse(localStorage.getItem('datalogin'))
+    
+    console.log('dataaa', datalogin.order.length)
     const goToProfile = () => router.push('/profile');
     const goToCart = () => router.push('/cart');
 
@@ -17,13 +19,13 @@ function UserNav(props) {
             <Nav.Link onClick={goToCart}>
                 <Image src={cart} alt="cart" style={{marginTop:"8px"}} />
                 {datalogin.order.length > 0 && 
-                    <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger text-white">{datalogin.order.length}</span>
+                    <span className="cart-notif" >{datalogin.order.length}</span>
                 }
             </Nav.Link>
             <Dropdown as={Nav.Item} className="ml-3">
-                <Dropdown.Toggle as={Nav.Link}>
-                    {datalogin.avatar ? <Image src={datalogin.image} alt="profile" style={{position : 'relative' , transform : 'translate(15px, -3px)'}} className="img-avatar" />
-                        : <Image src={datalogin.image} alt="profile" className="img-avatar" style={{width:"50px",height:"50px", position : 'relative' , transform : 'translate(35px, -3px)'}} />
+                <Dropdown.Toggle as={Nav.Link} style={{marginRight:'10px'}}>
+                    {datalogin.avatar ? <Image src={datalogin.image} alt="profile"  style={{width:"50px",height:"50px", position : 'relative' , transform : 'translate(15px, -3px)'}}  className="img-avatar" />
+                        : <Image src={datalogin.image} alt="profile" className="img-avatar" style={{width:"50px",height:"50px", position : 'relative' , transform : 'translate(15px, -3px)'}} />
                     }
                 </Dropdown.Toggle>
                 <Dropdown.Menu align="right">

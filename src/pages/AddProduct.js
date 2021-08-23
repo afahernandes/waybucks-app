@@ -40,7 +40,7 @@ function AddProduct() {
                     <h3>Product</h3>
                     <Form onSubmit={handleOnSubmit} className="my-5">
                         <Form.Group className="formGroup">
-                            <Form.Control name="name"  className="formInput" onChange={(e)=>handleChange(e)} placeholder="Product Name" />
+                            <Form.Control name="product"  className="formInput" onChange={(e)=>handleChange(e)} placeholder="Product Name" />
                         </Form.Group>
                         <Form.Group className="formGroup">
                             <Form.Control name="price" className="formInput" type="number" min={0}  onChange={(e)=>handleChange(e)} placeholder="Price" />

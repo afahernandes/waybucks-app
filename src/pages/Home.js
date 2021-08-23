@@ -2,8 +2,11 @@ import React from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import Banner from "../assets/banner.svg";
 import CardList from "../component/CardList";
-import data from "../data/dataproduk";
 function Home() {
+  const data = JSON.parse(localStorage.getItem("dataproduct"));
+  console.log(data);
+
+
   return (
     <div>
       <Container>

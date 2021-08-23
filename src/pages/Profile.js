@@ -1,4 +1,4 @@
-import { Button, Col, Row } from "react-bootstrap";
+import {  Col, Row } from "react-bootstrap";
 import photo from "../assets/photo.png";
 import brandlogo from "../assets/brandlogo.svg";
 import qr from "../assets/qr.svg";
@@ -6,10 +6,12 @@ import qr from "../assets/qr.svg";
 function Profile() {
   const user = JSON.parse(localStorage.getItem("datalogin"));
   console.log(user);
+  const datatransactions = JSON.parse(localStorage.getItem("datatransaction"));
+  console.log(datatransactions);
 
   return (
     <Row className="justify-content-md-center">
-      <Col xs={5}>
+      <Col xs={4}>
       <h5 className="header3">
             <strong>My Profile</strong>
           </h5>
@@ -28,67 +30,58 @@ function Profile() {
           </Col>
         </Row>
       </Col>
-      <Col xs={5}>
+      <Col xs={6}>
         <h5 className="header3">
           <strong>My Transaction</strong>
         </h5>
         <div className="box1">
-        {user.order.length < 1 ? (
+        {datatransactions.length < 1 ? (
           <p className="text-secondary">There's no transaction yet</p>
         ) : (
           <ul className="list-group rounded">
-            {user.order.map(
+            {datatransactions.map(
               (
-                order // transaction
+                datatransaction // transaction
               ) => (
                 <li
                   className="list-group-item list-group-item-danger mb-3"
-                  key={order.id}
+                  key={datatransaction.id}
                 >
                   <div className="row">
                     <div className="col-md-9">
                       <ul className="list-group">
-                        {" "}
-                        {/*product in transaction*/}
-                        {order.transactionProducts.map((transactionProduct) => (
+                        {datatransaction.order.map((order) => (
                           <li
                             className="list-group-item list-group-item-danger"
-                            key={transactionProduct.id}
+                            key={order.id}
                           >
                             <div className="d-flex align-items-center ">
                               <img
-                                src={transactionProduct.product.image}
+                                src={order.img}
                                 alt="product"
+                                style={{width:'50px',margin :'15px' }}
                               />
                               <div className="ml-3 text-red">
                                 <h5>
                                   <strong>
-                                    {transactionProduct.product.name}
+                                    {order.product_name}
                                   </strong>
                                 </h5>
                                 <p>
                                   <span className="text-brown">Topping : </span>
-                                  {transactionProduct.transactionToppings
+                                  {order.topping
                                     .map(
-                                      (transactionTopping) =>
-                                        transactionTopping.topping.name
+                                      (topping) =>
+                                      topping.name
                                     )
                                     .join(", ")}
                                 </p>
                                 <p>
                                   <span className="text-brown">
-                                    SubTotal :{" "}
+                                    SubTotal :
                                   </span>
-                                  Rp.{" "}
-                                  {transactionProduct.transactionToppings
-                                    .map(
-                                      (transactionTopping) =>
-                                        transactionTopping.topping.price
-                                    )
-                                    .reduce(
-                                      (a, b) => a + b,
-                                      transactionProduct.product.price
-                                    )}
+                                  Rp. {order.subtotal.toLocaleString()}
+                                 
                                 </p>
                               </div>
                             </div>
@@ -104,26 +97,11 @@ function Profile() {
                       ></img>
                       <p>
                         Total :<br />
-                        <strong>Rp. {order.income}</strong>
+                        <strong>Rp. {datatransaction.income.toLocaleString()}</strong>
                       </p>
                       <div className="my-3">
-                        <label status={order.status} />
-                        {order.status === "PENDING" ? (
-                          <div className="my-5">
-                            <div>
-                              <label status={order.status} />
-                            </div>
-                            <div className="mt-3">
-                              <label status={order.status} />
-                            </div>
-                          </div>
-                        ) : (
-                          order.status === "PROCESSING" && (
-                            <div className="my-3">
-                              <label status={order.status} />
-                            </div>
-                          )
-                        )}
+                        <label >{datatransaction.status}</label>
+                        
                       </div>
                     </div>
                   </div>

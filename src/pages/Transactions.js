@@ -1,15 +1,41 @@
 
 import React from "react";
 import { Button } from "react-bootstrap";
+import { useHistory } from "react-router-dom";
 import btnapprove from "../assets/aprove.svg";
 import btncancel from "../assets/cancel.svg";
+
 function Transactions() {
+  const router=useHistory();
   const transactions = JSON.parse(localStorage.getItem('datatransaction'))
- console.log(transactions);
+  console.log(transactions);
 
-  function handleClick(){
+    const handleApprove = (ids) => {
+      const newProjects = transactions.map(p =>
+        p.id === (ids+1)
+          ? { ...p, status: 'Approved' }
+          : p
+      );
+      console.log(newProjects);
+      localStorage.setItem("datatransaction", JSON.stringify(newProjects)); 
+      router.push('/transaction');
+      }
 
-  }
+
+      const handleCancel = (ids) => {
+        const newProjects = transactions.map(p =>
+          p.id === (ids+1)
+            ? { ...p, status: 'Canceled' }
+            : p
+        );
+        console.log(newProjects);
+        localStorage.setItem("datatransaction", JSON.stringify(newProjects)); 
+        router.push('/transaction');
+        
+        }
+  
+
+  
 
   return (
     <div className="container">
@@ -40,10 +66,10 @@ function Transactions() {
               <td className="text-center">
                 {transaction.status === "Waiting Approve" ? (
                   <>
-                    <Button variant="danger" size="sm" style={{margin :"2px"}} onClick={handleClick}>
+                    <Button variant="danger" size="sm" style={{margin :"2px"}} onClick={() => handleCancel(i)}>
                       Cancel
                     </Button> 
-                    <Button variant="success" size="sm" style={{margin :"2px"}} onClick={handleClick}>
+                    <Button variant="success" size="sm" style={{margin :"2px"}} onClick={() => handleApprove(i)}>
                       Approve
                     </Button>
                   </>

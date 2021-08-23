@@ -1,8 +1,6 @@
-import { Button, Modal } from "bootstrap";
-import { useState } from "react";
+
 import { Card, Row, Col } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
-import LoginModal from "./modals/LoginModal";
 
 
 

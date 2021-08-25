@@ -17,7 +17,7 @@ function AddTopping() {
 
     function handleOnSubmit(e) {
         e.preventDefault();
-        data.id=Object.keys(datatopping).length+1;
+        data.id=Object.keys(datatopping).length+1;//
         datatopping.push(data);
         console.log(datatopping);
         localStorage.setItem("datatopping", JSON.stringify(datatopping)); 
@@ -35,7 +35,7 @@ function AddTopping() {
     
 
     return (
-        <div class="container">
+        <div className="container">
             <div className="row text-red">
                 <div className="col-md-7">
                     <h3>Topping</h3>

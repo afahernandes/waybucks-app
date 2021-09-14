@@ -3,9 +3,9 @@ import CardProduct from "./CardProduct";
 
 const CardList = ({data, product, handleAddProduct}) => {
   return (
-    <Row  >
+    <Row >
       {data.map((item, index) => ( 
-        <Col key={index} > 
+        <Col key={index} sm={3}> 
           <CardProduct item={item} Product={product} handleClick={handleAddProduct}/>
         </Col>
       ))}

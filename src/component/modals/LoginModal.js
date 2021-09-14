@@ -1,50 +1,77 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import { AppContext } from "../../context/AppContext";
 import { Form, Button, Modal } from "react-bootstrap";
-import { useHistory } from "react-router-dom";
+import { useHistory } from "react-router";
+
+import { API } from "../../config/api";
+import Swal from "sweetalert2";
 
 function LoginModal(props) {
-  const datauser = JSON.parse(localStorage.getItem("datauser"));
   const { handleClose, show, regis } = props;
+  const [state, dispatch] = useContext(AppContext);
+  const router = useHistory();
 
-  const [data, setData] = useState({
-    isLogin: false,
+  const [formData, setFormData] = useState({
     email: "",
     password: "",
-    status: "",
   });
 
-  // localStorage.setItem('datalogin', JSON.stringify(data));
-
+ 
   function toSwitch() {
     handleClose();
     regis();
   }
 
-  function handleOnSubmit(e) {
+  const handleOnSubmit = async (e) => {
     e.preventDefault();
-    datauser.map(function (element) {
-      if (data.email === element.email && data.password === element.password) {
-        localStorage.setItem("login", 'true');
-        localStorage.setItem("datalogin", JSON.stringify(element));
-        props.setData(data);
-        handleClose();
-      } else {
-        console.log("gagal");
-      }
-    });
-  }
+    try {
+      const body = JSON.stringify(formData);
+
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+
+      const response = await API.post("/login", body, config);
+    
+       // Notification
+        dispatch({
+          type: "LOGIN_SUCCESS",
+          payload: response.data.data,
+         });  
+        dispatch({
+          type: "UPDATE_CART",
+         });  
+         if (response.data.data.role === "Administrator") {
+           handleClose();
+           router.push("/transaction")
+           } else {
+            handleClose();
+            window.location.reload();
+
+        }
+      
+    } catch (error) {
+      Swal.fire({
+        text: "Login Failed !",
+        icon: "error",
+        confirmButtonColor: "red",
+      });
+      console.log(error);
+    }
+  };
 
   function handleChange(e) {
     e.preventDefault();
-    setData({
-      ...data,
-      isLogin: true,
+    setFormData({
+      ...formData,
       [e.target.name]: e.target.value,
     });
   }
 
   return (
-    <Modal show={show} onHide={handleClose}>
+    <Modal show={show} onHide={handleClose} animation={false}>
       <Modal.Body>
         <Form onSubmit={handleOnSubmit}>
           <h2 style={{ color: "red" }}>
@@ -77,7 +104,7 @@ function LoginModal(props) {
           <Form.Label className="formLabelCenter">
             Don't have an account ?
             <Form.Label onClick={toSwitch}>
-              <b>Klik Here</b>
+              <b>Click Here</b>
             </Form.Label>
           </Form.Label>
         </Form>

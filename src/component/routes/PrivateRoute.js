@@ -1,13 +1,14 @@
+import { useContext } from 'react';
 import {Route, Redirect} from 'react-router-dom';
+import { AppContext } from '../../context/AppContext';
 
 const PrivateRoute = ({component: Component, ...rest}) => {
-    const isLogin = JSON.parse(localStorage.getItem('login'))
-    console.log(isLogin);
-    
+    const [ state ] = useContext(AppContext);
+   
     return (
         <Route
             {...rest}
-            render = {(props) => (isLogin ? <Component {...props}/> :<Redirect to="/" /> 
+            render = {(props) => (state.isLogin ? <Component {...props}/> :<Redirect to="/" /> 
             )}
                 
         />

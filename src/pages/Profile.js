@@ -1,115 +1,206 @@
-import {  Col, Row } from "react-bootstrap";
+import { Button, Col, Row } from "react-bootstrap";
 import photo from "../assets/photo.png";
 import brandlogo from "../assets/brandlogo.svg";
 import qr from "../assets/qr.svg";
-
+import {  useEffect, useState } from "react";
+import { API,  } from "../config/api";
+import img1 from "../assets/profile.jpg";
+import Swal from "sweetalert2";
+import { useHistory } from "react-router";
 function Profile() {
-  const user = JSON.parse(localStorage.getItem("datalogin"));
-  console.log(user);
-  const datatransactions = JSON.parse(localStorage.getItem("datatransaction"));
-  console.log(datatransactions);
+  const router=useHistory();
+  const [profile, setProfile] = useState({});
+  const [transactions, setTransactions] = useState([]);
+  const [wait, setWait] = useState(false);
+  console.log("transaction", transactions);
+  useEffect(() => {
+    const getProfile = async () => {
+      try {
+        const getProfile = await API.get("/profile");
+        const getTransaction = await API.get("/cart");
+        //   console.log(getProfile);
+        //   console.log("Transaction",getTransaction);
+        setProfile(getProfile.data.data.users);
+        // console.log("profile",profile)
+        setTransactions(getTransaction.data.data.transactions);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getProfile();
+  }, [wait]);
+
+  const editProfile = () => {
+    router.push('/editprofile');
+}
+
+
+  const handleFinish = async (id) => {
+    setWait(true);
+   
+    const body = JSON.stringify({
+      status: "Success",
+    });
+
+    const config = {
+      headers: {
+        "content-type": "application/json",
+      },
+    };
+
+    try {
+      await API.patch("/transaction/" + id, body, config);
+      
+      await Swal.fire(
+        "Approved",
+        "The transaction status successfully",
+        "success"
+      );   } catch (err) {
+      console.log(err.response.data.message);
+      setWait(false);
+    } 
+  };
+  const path = "http://localhost:5000/uploads/";
+  const months = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+];
+const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
   return (
-    <Row className="justify-content-md-center">
+    <Row className="justify-content-md-center mt-3">
       <Col xs={4}>
-      <h5 className="header3">
-            <strong>My Profile</strong>
-          </h5>
-        <Row xs={10}>
-          
-          <Col xs={6}>
-            <img src={photo} alt="profile" width={'100%'} />
+        <h5 className="header3">
+          <strong>My Profile</strong>
+        </h5>
+        <Row xs={10} className="mt-4">
+          <Col xs={5}>
+            {profile.image ? (
+              <img src={path+profile.image} alt="profile" className="box-image" height={"160px"} />
+            ) : (
+              <img src={img1} alt="profile" className="box-image" height={"160px"}  />
+            )}
           </Col>
-          <Col xs={6}>
-            <Row className="xs-3">
+          <Col xs={7} >
               <strong className="text-red">Full Name</strong>
-              <p>{user.fullname}</p>
+              <p>{profile.fullname}</p>
               <strong className="text-red">Email</strong>
-              <p>{user.email}</p>
-            </Row>
+              <p>{profile.email}</p>
+              <Button variant="red" onClick={editProfile} >Edit Profile</Button>
+            
           </Col>
         </Row>
       </Col>
-      <Col xs={6}>
+      <Col xs={7}>
         <h5 className="header3">
           <strong>My Transaction</strong>
         </h5>
-        <div className="box1">
-        {datatransactions.length < 1 ? (
-          <p className="text-secondary">There's no transaction yet</p>
-        ) : (
-          <ul className="list-group rounded">
-            {datatransactions.map(
-              (
-                datatransaction // transaction
-              ) => (
+        <div >
+          {transactions.length < 1 ? (
+            <p className="text-secondary">There's no transaction yet</p>
+          ) : (
+            <ul className="list-group rounded scroll-item2">
+              {transactions.map((datatransaction) => (
                 <li
                   className="list-group-item list-group-item-danger mb-3"
                   key={datatransaction.id}
                 >
                   <div className="row">
-                    <div className="col-md-9">
-                      <ul className="list-group">
-                        {datatransaction.order.map((order) => (
+                    <div className="col-md-8">
+                      <ul className="list-group scroll-item" >
+                        {datatransaction.orders.map((order,i) => {
+                          const date=new Date(datatransaction.createdAt)
+                          
+                          
+                          return(
                           <li
-                            className="list-group-item list-group-item-danger"
-                            key={order.id}
+                            className="mb-3"
+                            key={i}
                           >
                             <div className="d-flex align-items-center ">
                               <img
-                                src={order.img}
-                                alt="product"
-                                style={{width:'50px',margin :'15px' }}
+                                src={path + order.products.image}
+                                alt="product" 
+                                className="box-image"
+                                style={{ width: "70px", marginRight: "10px" }}
                               />
-                              <div className="ml-3 text-red">
-                                <h5>
-                                  <strong>
-                                    {order.product_name}
-                                  </strong>
-                                </h5>
-                                <p>
-                                  <span className="text-brown">Topping : </span>
-                                  {order.topping
-                                    .map(
-                                      (topping) =>
-                                      topping.name
-                                    )
-                                    .join(", ")}
-                                </p>
-                                <p>
-                                  <span className="text-brown">
-                                    SubTotal :
-                                  </span>
-                                  Rp. {order.subtotal.toLocaleString()}
-                                 
-                                </p>
+                              <div className="text-red">
+                                  <strong>{order.products.tittle}</strong>
+                                 <br/>
+                                 <span className="textsmall mb-12" ><strong>{days[date.getDay()]}</strong>, {date.getDate()} {months[date.getMonth()]} {date.getFullYear()} </span>
+                                 <br/>
+                                  <span  className="text-brown "><strong>Topping :</strong> </span>
+                                  <span  className="textsmall"> {order.toppingorders
+                                    .map((topping) => topping.toppings.name)
+                                    .join(", ")}</span>
+                                <br/>
+                                  <span  className="text-brown ">SubTotal :</span>
+                                  <span  className="text-brown "> Rp.{" "}
+                                  {(order.toppingorders
+                                    .map((topping) => topping.toppings.price)
+                                    .reduce((a, b) => a + b, 0) +
+                                    order.products.price).toLocaleString()}</span>
+                                
                               </div>
                             </div>
                           </li>
-                        ))}
+                        )})}
                       </ul>
                     </div>
-                    <div className="col-md-3 text-center">
-                      <img src={brandlogo} alt="logo"></img>
-                      <img
-                        src={qr}
-                        alt="logo"
-                      ></img>
-                      <p>
-                        Total :<br />
-                        <strong>Rp. {datatransaction.income.toLocaleString()}</strong>
+                    <div className="col-md-4 text-center">
+                      <br/>
+                      <img src={brandlogo} alt="logo" width="60px"></img>
+                      <br/> <br/>
+                      <img src={qr} alt="qr" width="60px"></img>
+                      <br/> <br/>
+                      {datatransaction.status === "Waiting Approve" ? (
+                <label className="text-status" style={{color:"#FF9900"}}>{datatransaction.status}</label>
+                ) : datatransaction.status === "Success" ? (
+                  <label className="text-status" style={{color:"#78A85A"}}>{datatransaction.status}</label>
+                ) : datatransaction.status === "On The Way" ? (
+                  <label className="text-status" style={{color:"#00D1FF"}}>{datatransaction.status}</label>
+                ) : (
+                  <label className="text-status" style={{color:"#E83939"}}>{datatransaction.status}</label>
+                )}
+                      <br/> <br/>
+                      <p> <strong>
+                       
+                        Sub Total : 
+                            {Number(datatransaction.income).toLocaleString()}
+                        </strong>
                       </p>
                       <div className="my-3">
-                        <label >{datatransaction.status}</label>
-                        
+                         {datatransaction.status === "On The Way" ? (
+                          <>
+                            <Button
+                              variant="danger"
+                              size="sm"
+                              style={{ margin: "2px" }}
+                              onClick={() => handleFinish(datatransaction.id)}
+                            >
+                              Finish
+                            </Button>
+                          </>
+                        ) : (
+                          " "
+                        )}
                       </div>
                     </div>
                   </div>
                 </li>
-              )
-            )}
-          </ul>
-        )}
+              ))}
+            </ul>
+          )}
         </div>
       </Col>
     </Row>

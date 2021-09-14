@@ -1,22 +1,15 @@
-import React, { useState } from "react";
+import React, {  useState } from "react";
 import { Form, Button, Modal } from "react-bootstrap";
+import { API } from "../../config/api";
+import Swal from "sweetalert2";
 
 function RegisterModal(props) {
-  const datauser = JSON.parse(localStorage.getItem("datauser"));
-
   const { handleClose, show, login } = props;
-  const [data, setData] = useState({
-    id: "",
-    image:"",
+  
+  const [formData, setFormData] = useState({
     email: "",
     password: "",
     fullname: "",
-    username: "",
-    gender: "",
-    address: "",
-    phone: "",
-    status: "",
-    order: [],
   });
 
   function toSwitch() {
@@ -24,34 +17,56 @@ function RegisterModal(props) {
     login();
   }
 
-  function handleOnSubmit(e) {
+  const handleOnSubmit = async (e) => {
     e.preventDefault();
-    data.id=Object.keys(datauser).length+1;
-    datauser.push(data);
-    console.log(datauser);
-    localStorage.setItem("datauser", JSON.stringify(datauser)); 
-    handleClose();
-  }
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+      const body = JSON.stringify(formData);
+      const response = await API.post("/register", body, config);
+
+      console.log(response);
+
+      // Notification
+      if (response.status === 200) {
+        Swal.fire({
+          text: "Success create account !",
+          icon: 'success',
+          confirmButtonColor: 'red',
+        }).then(
+          handleClose
+        )
+      } else {
+        Swal.fire({
+          text: "Failed create account !",
+          icon: 'error',
+          confirmButtonColor: 'red',
+        })
+      }
+    } catch (error) {
+      Swal.fire({
+        text: "Failed create account !",
+        icon: 'error',
+        confirmButtonColor: 'red',
+      })
+      console.log(error);
+    }
+  };
 
   function handleChange(e) {
     e.preventDefault();
-    setData({
-      ...data,
-      id:"", 
-      image:"/img/User.png",
+    setFormData({
+      ...formData,
       [e.target.name]: e.target.value,
-      username: "",
-      gender: "",
-      address: "",
-      phone: "",
-      status: "Customer",
-      order: [],
     });
   }
 
   return (
     <div>
-      <Modal show={show} onHide={handleClose}>
+      <Modal show={show} onHide={handleClose} animation={false}>
         <Modal.Body>
           <Form onSubmit={handleOnSubmit}>
             <h2 style={{ color: "red" }}>
@@ -94,7 +109,7 @@ function RegisterModal(props) {
             <Form.Label className="formLabelCenter">
               Already have an account ?
               <Form.Label onClick={toSwitch}>
-                <b>Klik Here</b>
+                <b>Click Here</b>
               </Form.Label>
             </Form.Label>
           </Form>

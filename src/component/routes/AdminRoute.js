@@ -1,16 +1,15 @@
+import { useContext } from 'react';
 import {Route, Redirect} from 'react-router-dom';
+import { AppContext } from '../../context/AppContext';
 
 const AdminRoute = ({component: Component , ...rest}) => {
-    const isLogin = JSON.parse(localStorage.getItem('login'))
-    console.log(isLogin);
-    const datalogin = JSON.parse(localStorage.getItem('datalogin'))
-    console.log(datalogin);
-    
+    const [state ] = useContext(AppContext);
+    console.log("TSS",state)
     return (
         <Route
             {...rest}
             render = {(props) => {
-                    if (isLogin==true && datalogin.status === "Admin") {
+                    if (state.isLogin === true && state.user.role === "Administrator") {
                         return <Component {...props}/>
                     } else {
                         return <Redirect to="/" 

@@ -17,13 +17,12 @@ function GuestNav(props) {
     return (
         <div>
             <Nav>
-            <Button className="button2" onClick={handleShow} variant="light'">Login</Button>
-              <Button className="button1" onClick={handleShowRegis} >Register</Button>
+            <Button onClick={handleShow} variant="outline-red"  className="button2">Login</Button>
+                <Button onClick={handleShowRegis} variant="red"  className="button2">Register</Button>
+                
               <LoginModal show={show} handleClose={handleClose} regis={handleShowRegis} setData={props.setData} />
               <RegisterModal show={showRegis} handleClose={handleCloseRegis} login={handleShow}/>
             </Nav>
-            
-            
         </div>
     )
 };

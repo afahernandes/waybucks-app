@@ -2,15 +2,16 @@ import React from "react";
 
 const CardTopping = ({...props}) => {
     
-  const {id, name, imgUrl} = props.topping;
+  const {id, name, image} = props.topping;
 
   return (
       <div className="col-md-3">
-          <div className="card border-light">
+          <div >
               <div className="card-body">
                   <label className="block-check">
-                      <img src={imgUrl} alt={name} className="img-topping" />
-                      <input 
+                    <center>
+                      <img src={image} alt={name} className="img-topping" />
+                     </center> <input 
                           type="checkbox"
                           id={id}
                           className="hidden-check"
@@ -20,10 +21,11 @@ const CardTopping = ({...props}) => {
                       <span className="checkmark"></span>
                   </label>
               </div>
-              <div >
-                  <div className="text-topping">{name}</div>
-              </div>
-          </div>
+                 <center>
+                   
+                  <span className="text-topping">{name}</span>
+                  </center>
+            </div>
       </div>
   );
 };

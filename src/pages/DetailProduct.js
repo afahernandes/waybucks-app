@@ -1,18 +1,54 @@
+import { useContext } from "react";
 import { useState } from "react";
 import { Row, Col, Button, Form } from "react-bootstrap";
 import { useParams } from "react-router-dom";
-import img1 from "../assets/img1.svg";
 import CardTopping from "../component/CardTopping";
+import { AppContext } from "../context/AppContext";
+import { API } from "../config/api";
+import { useEffect } from "react";
+import Loading from "../component/Loading";
+import PopUp from "../component/modals/PopUp";
 
 function DetailProduct() {
-  const toppings = JSON.parse(localStorage.getItem("datatopping"));
-  const data = JSON.parse(localStorage.getItem("dataproduct"));
-  const datalogin = JSON.parse(localStorage.getItem("datalogin"));
-  const datauser = JSON.parse(localStorage.getItem("datauser"));
+  const { id } = useParams();
+  const [state, dispatch] = useContext(AppContext);
+  const [products, setProduct] = useState([]); 
+  const [message, setMessage] = useState("");
+  const [toppings, setToppings] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [showPop, setShowPop] = useState(false);
+     
+  const fetchProduct = async () => {
+    try {
+      setLoading(true);
+      const responseProduct = await API("/product/" + id);
+      const responseTopping = await API("/toppings");
+      console.log("product", responseProduct);
+      setProduct(responseProduct.data.data);
+      setToppings(responseTopping.data.data.data);
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-  const params = useParams();
+  // fetch data toppings
+  // const fetchToppings = async () => {
+  //   try {
+  //     setLoading(true);
+  //     const responseTopping = await API("/toppings");
+  //     setToppings(responseTopping.data.data.data);
+  //     setLoading(false);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
-  const products = data.find((item) => item.id === parseInt(params.id));
+  // fetch data on render
+  useEffect(() => {
+    fetchProduct();
+  //  fetchToppings();
+  }, []);
 
   const [checkedToppings, setCheckedToppings] = useState({});
   const handleChange = (event) => {
@@ -30,76 +66,97 @@ function DetailProduct() {
         : selectedToppingsId.splice(key, 1);
     }
   }
-  console.log(selectedToppingsId);
+  //console.log(selectedToppingsId);
 
   const selectedToppings = selectedToppingsId.map((selectedToppingId) =>
     toppings.find((topping) => topping.id == selectedToppingId)
   );
 
-  console.log(selectedToppings);
+  //console.log(selectedToppings);
+  const subTotal = selectedToppings
+    .map((selectedTopping) => selectedTopping.price)
+    .reduce((prev, curr) => prev + curr, products.price);
+  //console.log(subTotal);
 
-  const subTotal = selectedToppings.map(selectedTopping => selectedTopping.price).reduce((prev, curr) => prev + curr, products.price);
-  console.log(subTotal);
+  const handleAddCart = (e) => {
+    e.preventDefault();
 
-  function handleOnSubmit() {
-   const orders={id:1 , tgl :"22 August 2021", product_name: products.product, img: products.img, topping :selectedToppings, subtotal : subTotal,}
-    datalogin.order.push(orders);
-    console.log(datalogin.order);
-    localStorage.setItem("datalogin", JSON.stringify(datalogin)); 
+      console.log(selectedToppingsId);
+      dispatch({
+        type: "ADD_TO_CART",
+        payload: {
+          id: products.id,
+          product: products,
+          toppings: selectedToppings,
+          initialPrice: subTotal,
+          quantity: 1,
+          subTotal: subTotal,
+        },
+      });
+      dispatch({
+        type: "SAVE_CART",
+      });
+      setShowPop(true);
+      setMessage("Success added item to cart!");
+      setCheckedToppings({})
 
-  }
+  };
 
-  return (
+  return loading || !products || toppings.length < 1 ? (
+    <Loading />
+  ) : (
     <>
-    <Form onSubmit={handleOnSubmit}>
-      <Row className="justify-content-md-center">
-        <Col xs={4}>
-          <img src={products.img} width={"100%"} alt="product" />
-        </Col>
-        <Col xs={6}>
-          <div className="d-flex flex-column justify-content-space-beetwen">
-            <div>
-              <h3 className="header3">{products.product}</h3>
-              <p className="tittlePrice">Rp {products.price.toLocaleString()}</p>
-            </div>
-            <div>
-              <p className="header3">Choose Toppings</p>
-              <Row>
-                {toppings.map((topping) => (
-                  <CardTopping
-                    topping={topping}
-                    key={topping.id}
-                    onChange={handleChange}
-                    checked={checkedToppings[topping.id] || false}
-                  />
-                ))}
-              </Row>
-            </div>
-            <div>
-              <Row>
-                <Col xs={6}>
-                  <p className="header3">Subtotal</p>
-                </Col>
-                <Col xs={6} style={{ textAlign: "right" }}>
-                  <p className="header3">Rp {subTotal.toLocaleString()}</p>
-                </Col>
-              </Row>
-            </div>
+         <Row className="justify-content-md-center">
+          <Col xs={4} className="mt-4">
+            <img src={products.image} width={"100%"} alt="product" />
+          </Col>
+          <Col xs={6}>
+            <div className="d-flex flex-column justify-content-space-beetwen ">
+              <div>
+                <h1 className="header3">{products.tittle}</h1>
+                <p className="tittlePrice">
+                  Rp {products.price.toLocaleString()}
+                </p>
+              </div>
+              <div>
+                <p className="header3">Choose Toppings</p>
+                <Row className="scroll-toppings">
+                  {toppings.map((topping) => (
+                    <CardTopping
+                      topping={topping}
+                      key={topping.id}
+                      onChange={handleChange}
+                      checked={checkedToppings[topping.id] || false}
+                    />
+                  ))}
+                </Row>
+              </div>
+              <div>
+                <Row>
+                  <Col xs={6}>
+                    <p className="header3">Subtotal</p>
+                  </Col>
+                  <Col xs={6} style={{ textAlign: "right" }}>
+                    <p className="header3">Rp {subTotal.toLocaleString()}</p>
+                  </Col>
+                </Row>
+              </div>
 
-            <div>
-              <Button
-                className="button1"
-                style={{ width: "100%" }}
-                type="submit"
-              >
-                Add To Cart
-              </Button>
+              <div>
+                <Button 
+                  className="button1"
+                  onClick={handleAddCart}
+                  style={{ width: "100%" }}
+                  type="submit"
+                >
+                  Add To Cart
+                </Button>
+              </div>
             </div>
-          </div>
-        </Col>
-      </Row>
-      <hr />
-      </Form>
+          </Col>
+        </Row>
+      <PopUp show={showPop} hide={() => setShowPop(false)} message={message} />
+      
     </>
   );
 }

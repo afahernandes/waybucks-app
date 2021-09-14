@@ -1,33 +1,40 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import Banner from "../assets/banner.svg";
 import CardList from "../component/CardList";
-function Home() {
-  const data = JSON.parse(localStorage.getItem("dataproduct"));
-  console.log(data);
+import { API } from "../config/api";
 
+function Home() {
+  const [products, setProducts] = useState([]);
+
+  const fetchProducts = async () => {
+    try {
+      const response = await API("/products");
+      console.log(response);
+      setProducts(response.data.data.data);
+      } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
 
   return (
-    <div>
+    <div className="mt-5"> 
       <Container>
-        
-        <Row className="justify-content-md-center">
-          <Col md="auto">
+        <Row
+          className="justify-content-md-center"
+          style={{ marginBottom: "20px" }}
+        >
+          <Col md="10">
             <img src={Banner} alt="v" style={{ width: "100%" }} />
-            <h3 className="header3">Let’s Order</h3>
+            <h3 className="header3 mt-3 mb-3">Let’s Order</h3>
+            <CardList data={products} />
           </Col>
         </Row>
       </Container>
-
-      <Container style={{marginBottom:'20px'}}>
-        <Row className="justify-content-md-center">
-          <Col md="auto">
-            <CardList data={data} />
-          </Col>
-        </Row>
-      </Container>
-      
-     
     </div>
   );
 }
